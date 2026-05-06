@@ -1,0 +1,68 @@
+import User from '../models/User.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';4
+import generateToken from '../utils/function.js'
+     
+const login = async (req, res) => {
+    try {
+        const {email,password} = req.body;
+        const isUser = await User.findOne({ email });
+        if (!isUser) {
+            return res.status(404).json({ message: 'User does not exist' });
+        }
+        const checkPassword = await bcrypt.compare(password, isUser.password);
+        if (!checkPassword) {
+            return res.status(400).json({ message: 'Invalid password' });
+        }
+        const token = generateToken(isUser)
+
+        return res.status(200).json({
+            message: "Login successful",
+            token,
+            user: {
+                id: isUser._id,
+                name: isUser.name,
+                email: isUser.email
+            }
+        });
+
+    } catch (error) {
+        console.error(error.message);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
+
+
+const register = async(req,res)=>{
+    try {
+        const {email,name,password}= req.body;
+        const isUser = await User.findOne({email});
+        if(isUser){
+            return res.status(404).json({message : "already a user "})
+        }
+
+        const hashpassword =await bcrypt.hash(password,10);
+        const newUser = await User.create({name,email,
+            password : hashpassword})
+
+        const token = generateToken(newUser)
+
+        return res.status(201).json({
+            message: "User registered successfully",
+            token,
+            user: {
+                id: newUser._id,
+                name: newUser.name,
+                email: newUser.email
+            }
+        });
+
+
+    } catch (error) {
+         console.error(error.message);
+        return res.status(500).json({ message: "Server error" });
+    }
+}
+
+export  {login, register}
