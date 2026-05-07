@@ -8,12 +8,10 @@ import {
 
 import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
-
+import {register} from "../api/API"
 const Register = () => {
   const { darkMode } = useTheme();
-
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -28,18 +26,19 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match");
       return;
     }
-
-    console.log(formData);
-
-    // Save user name
-    localStorage.setItem("userName", formData.name);
+    try {
+      const data = await register(formData);
+   localStorage.setItem("token", data.token);
+   localStorage.setItem("user", JSON.stringify(data.user));
+    } catch (error) {
+      console.log(error);
+    }
 
     navigate("/");
   };

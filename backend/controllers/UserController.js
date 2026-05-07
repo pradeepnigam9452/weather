@@ -15,17 +15,14 @@ const login = async (req, res) => {
             return res.status(400).json({ message: 'Invalid password' });
         }
         const token = generateToken(isUser)
-
         return res.status(200).json({
             message: "Login successful",
             token,
             user: {
                 id: isUser._id,
                 name: isUser.name,
-                email: isUser.email
             }
         });
-
     } catch (error) {
         console.error(error.message);
         return res.status(500).json({ message: "Server error" });
@@ -54,7 +51,6 @@ const register = async(req,res)=>{
             user: {
                 id: newUser._id,
                 name: newUser.name,
-                email: newUser.email
             }
         });
 

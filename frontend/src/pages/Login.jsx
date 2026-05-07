@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import { Mail, Lock, CloudSun } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
-
+import {login} from '../api/API'
 const Login = () => {
   const { darkMode } = useTheme();
-
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -20,14 +18,15 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-
-    console.log(formData);
-
-    // Save user example
-    localStorage.setItem("userName", "Prince");
-
+    try {
+    const data = await login(formData);
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+  } catch (error) {
+    console.log(error);
+  }
     navigate("/");
   };
 
@@ -142,7 +141,6 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Forgot Password */}
           <div className="flex justify-end">
             <Link
               to="/forgot-password"
@@ -151,8 +149,6 @@ const Login = () => {
               Forgot Password?
             </Link>
           </div>
-
-          {/* Button */}
           <button
             type="submit"
             className="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg transition-all shadow-lg"
@@ -160,8 +156,6 @@ const Login = () => {
             Login
           </button>
         </form>
-
-        {/* Register */}
         <p
           className={`text-center mt-8 ${
             darkMode ? "text-gray-300" : "text-slate-600"
