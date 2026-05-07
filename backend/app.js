@@ -3,12 +3,15 @@ import cors from 'cors'
 import mongoose from 'mongoose';
 import ConnectDb from './utils/Db.js'
 import userRoutes from './routes/userRoutes.js';
+import weatherRoutes from './routes/WetherRoutes.js'
+
 const app = express();
 app.use(cors())
 app.use(express.json())
 ConnectDb()
 
 app.use('/api', userRoutes);
+app.use("/api", weatherRoutes);
 app.get('/',(req,res)=>{
     res.json({massage : 'hello '})
 })

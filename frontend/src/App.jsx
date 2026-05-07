@@ -7,6 +7,7 @@ import About from './pages/About'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import NotFound from './pages/NotFound'
+import WeatherDetails from './pages/WeatherDetails'
 const App = () => {
   return (
    <>
@@ -16,6 +17,7 @@ const App = () => {
          <Route path="/about" element={<About />} />
          <Route path="/login" element={<Login />} />
          <Route path="/register" element={<Register />} />
+         <Route path="/WeatherDetails" element={<WeatherDetails />} />
           <Route path="*" element={<NotFound />} />
    </Routes>
    <Footer />

@@ -27,7 +27,6 @@ export const searchWeather = async (city) => {
   try {
     const res = await API.get(`/weather/${city}`);
     return res.data;
-
   } catch (error) {
     console.log(error);
     throw error;
