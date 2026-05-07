@@ -18,17 +18,24 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = async(e) => {
-    e.preventDefault();
-    try {
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
     const data = await login(formData);
     localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
+    localStorage.setItem(
+      "user",
+      JSON.stringify(data.user)
+    );
+    navigate("/");
   } catch (error) {
     console.log(error);
+
+    alert(
+      error.response?.data?.message || "Login failed"
+    );
   }
-    navigate("/");
-  };
+};
 
   return (
     <div

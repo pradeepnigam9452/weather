@@ -1,29 +1,27 @@
-import FavoriteCity from '../models/FavoriteCity'
+import FavoriteCity from '../models/FavoriteCity.js'
 
+export const createFavoriteCity = async (req, res) => {
+  try {
+    const { city } = req.body;
+    const newCity = await FavoriteCity.create({
+      city,
+      user: req.user.id,
+    });
+    return res.status(201).json({
+      message: "Favorite city added",
+      data: newCity,
+    });
+  } catch (error) {
+    console.log(error.message);
 
-const createFavoriteCity = async(req,res)=>{
-    try {
-        const {city} = req.body;
-        const userId = req.body.id;
-        if(!city){
-            return res.status(401).json({message : 'please choose any city '})
-        }
-        const exists = await FavoriteCity.findOne({user : userId ,city : city}) ;
-        if(exists){
-             return res.status(400).json({ message: "City already added" });
-        }
-        const newCity = await FavoriteCity.create({user : userId , city});
-         return res.status(201).json({ message: "Favorite city added",data: newCity });
-    } catch (error) {
-        console.error(error.message);
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({
+      message: "Server error",
+    });
   }
-    
-}
+};
 
 
-
-const deleteCity = async (req, res) => {
+ export const deleteCity = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user.id;
@@ -40,5 +38,25 @@ const deleteCity = async (req, res) => {
   } catch (error) {
     console.error(error.message);
     return res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+export const allFavoriteCity = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const data = await FavoriteCity.find({
+      user: userId,
+    }).populate("user");
+    return res.status(200).json({
+      message: "All favorite cities",
+      data,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({
+      message: "Server error",
+    });
   }
 };

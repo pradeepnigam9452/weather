@@ -4,6 +4,15 @@ const API = axios.create({
   baseURL: "http://localhost:8000/api"
 });
 
+API.interceptors.request.use((req) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    req.headers.Authorization = `Bearer ${token}`;
+  }
+  return req;
+});
+
+
 export const login = async (formData) => {
   try {
     const res = await API.post("/login", formData);
@@ -29,6 +38,38 @@ export const searchWeather = async (city) => {
     return res.data;
   } catch (error) {
     console.log(error);
+    throw error;
+  }
+};
+
+export const addFavCity = async (city) => {
+  try {
+    const res = await API.post("/createFavoriteCity", city);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const deleteCity = async (id) => {
+  try {
+    const res = await API.delete(`/delete/${id}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const allFavCity = async () => {
+  try {
+    const res = await API.get("/allFavoriteCity");
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+
     throw error;
   }
 };
